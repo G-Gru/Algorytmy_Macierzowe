@@ -1,0 +1,1 @@
+A directory for generated results, graphs etc.
