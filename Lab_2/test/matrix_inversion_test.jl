@@ -1,7 +1,7 @@
+using Lab_2.matrix_inversion
+
 using Test
 using LinearAlgebra
-include("../src/matrix_inversion.jl")
-using .matrix_inversion
 using Random
 
 rand01_open() = 1e-8 .+ (1.0 - 1e-8) * rand()
