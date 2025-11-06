@@ -28,7 +28,7 @@ uuid = "ac6e5ff7-fb65-4e79-a425-ec3bc9c03011"
 version = "1.12.0"
 
 [[deps.Lab_2]]
-deps = ["LinearAlgebra", "Test"]
+deps = ["LinearAlgebra", "Random", "Test"]
 path = "."
 uuid = "65211736-3265-4963-88d5-824b6c0b0de3"
 version = "0.1.0"

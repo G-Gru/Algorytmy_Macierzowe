@@ -1,10 +1,7 @@
 name = "Lab_2"
 uuid = "65211736-3265-4963-88d5-824b6c0b0de3"
 version = "0.1.0"
-authors = [
-  "Grzegorz Grudzień <ggrudzien@student.agh.edu.pl>",
-  "Oliwia Zawiła <oazawila@student.agh.edu.pl>"
-]
+authors = ["Grzegorz Grudzień <ggrudzien@student.agh.edu.pl>", "Oliwia Zawiła <oazawila@student.agh.edu.pl>"]
 
 [deps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
