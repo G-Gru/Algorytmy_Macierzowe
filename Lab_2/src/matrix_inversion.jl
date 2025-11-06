@@ -13,7 +13,7 @@ end
 function inverse(A::AbstractVector, mul = (X,Y)->X*Y, tri::Symbol = :none)
     n = length(A)
     if n == 1
-        return similar(A, eltype(A), 1) .= 1 / A[1]
+        return A .^ -1
     else
         throw(ArgumentError("vector inversion not implemented for length > 1"))
     end
@@ -26,7 +26,7 @@ function inverse(A::AbstractMatrix, mul = (X,Y)->X*Y, tri::Symbol = :none)
         throw(ArgumentError("matrix must be square"))
     end
     if n == 1
-        return similar(A, eltype(A), 1, 1) .= 1 / A[1,1]
+        return A .^ -1
     end
 
     n1 = fld(n, 2)
