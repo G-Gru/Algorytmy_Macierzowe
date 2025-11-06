@@ -1,5 +1,6 @@
-using Lab_2.matrix_inversion
+include(joinpath(@__DIR__, "..", "src", "Lab_2.jl"))
 
+using .Lab_2.matrix_inversion
 using Test
 using LinearAlgebra
 using Random
