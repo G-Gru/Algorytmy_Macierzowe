@@ -24,12 +24,12 @@ function triangulate(A::AbstractMatrix, b::AbstractVector, mul=*)
     b2  = @view b[nhalf+1:end]
 
     L11, U11 = LU_factor(A11)
-    L11inv, U11inv = inverse(L11), inverse(U11)
+    L11inv, U11inv = inverse(L11)[1], inverse(U11)[1]
 
     S = A22 - reduce(mul, [A21, U11inv, L11inv, A12])
 
     LS, US = LU_factor(S)
-    LSinv = inverse(LS)
+    LSinv, _, _ = inverse(LS)
 
     C11 = U11
     C12 = mul(L11, A12)
