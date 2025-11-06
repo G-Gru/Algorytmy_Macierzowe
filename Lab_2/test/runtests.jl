@@ -1,1 +1,4 @@
 include("matrix_inversion_test.jl")
+include("strassen_padded_test.jl")
+include("strassen_multiplication_test.jl")
+include("LU_factorization_test.jl")
