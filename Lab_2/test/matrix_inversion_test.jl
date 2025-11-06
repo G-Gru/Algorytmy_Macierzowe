@@ -104,4 +104,16 @@ rand01_open() = 1e-8 .+ (1.0 - 1e-8) * rand()
     # custom multiplication argument
     mul(X,Y) = X * Y
     @test isapprox(inverse(A2, mul), invA2; atol=1e-10)
+
+    i = 0
+    rng = MersenneTwister(2137)
+    try
+        for outer i ∈ 1:30
+            A = rand(rng, i, i)
+            invA = inverse(A)
+            @test isapprox(A * invA, I, atol=1e-8)
+        end
+    catch
+        println("pierdoli się dla ", i)
+    end
 end

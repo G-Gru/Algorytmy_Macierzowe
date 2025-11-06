@@ -12,6 +12,7 @@ function triangulate(A::AbstractMatrix, b::AbstractVector, mul=*)
     if !(n == size(A, 2) == size(b, 1))
         throw(ArgumentError("A must be of size n×n and b must be of size n"))
     end
+    n == 1 && return A, b
 
     nhalf = n ÷ 2
 
@@ -19,8 +20,8 @@ function triangulate(A::AbstractMatrix, b::AbstractVector, mul=*)
     A12 = @view A[1:nhalf, nhalf+1:end]
     A21 = @view A[nhalf+1:end, 1:nhalf]
     A22 = @view A[nhalf+1:end, nhalf+1:end]
-    b1    = @view b[1:nhalf]
-    b2    = @view b[nhalf+1:end]
+    b1  = @view b[1:nhalf]
+    b2  = @view b[nhalf+1:end]
 
     L11, U11 = LU_factor(A11)
     L11inv, U11inv = inverse(L11), inverse(U11)
