@@ -1,0 +1,4 @@
+max_size=64
+step=7
+trials=3
+random_seed=2025
