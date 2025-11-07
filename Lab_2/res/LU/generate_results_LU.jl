@@ -9,10 +9,12 @@ using Plots
 using .LU_factorization
 using .strassen_padded
 
+default_mul(A, B, add_count::Ref{Int}=Ref(0), mul_count::Ref{Int}=Ref(0)) = (A * B, add_count[], mul_count[])
+
 const CONFIG = (
-    max_size = 64,
-    step = 7,
-    trials = 3,
+    max_size = 1040,
+    step = 10,
+    trials = 10,
     random_seed = 2025,
     output_dir = joinpath(@__DIR__, "out")
 )
@@ -97,6 +99,24 @@ function plot_results(summary, sizes; output_dir::AbstractString)
     )
     plot!(p_ops, sizes_sorted, avg_muls; label = "Multiplications", marker = :diamond, linewidth = 2)
 
+    safe_adds = [max(val, eps(Float64)) for val in avg_adds]
+    safe_muls = [max(val, eps(Float64)) for val in avg_muls]
+    safe_times = [max(val, eps(Float64)) for val in avg_times]
+
+    p_ops_log = plot(
+        sizes_sorted,
+        safe_adds;
+        label = "Additions",
+        xlabel = "Matrix size (n)",
+        ylabel = "Average count (log scale)",
+        title = "Average operation counts vs size (LU, log-log)",
+        marker = :circle,
+        legend = :topleft,
+        linewidth = 2,
+        yscale = :log10
+    )
+    plot!(p_ops_log, sizes_sorted, safe_muls; label = "Multiplications", marker = :diamond, linewidth = 2)
+
     p_time = plot(
         sizes_sorted,
         avg_times;
@@ -109,13 +129,32 @@ function plot_results(summary, sizes; output_dir::AbstractString)
         linewidth = 2
     )
 
+    p_time_log = plot(
+        sizes_sorted,
+        safe_times;
+        label = "Runtime",
+        xlabel = "Matrix size (n)",
+        ylabel = "Average time (s, log scale)",
+        title = "Average runtime vs size (LU, log-log)",
+        marker = :circle,
+        legend = :topleft,
+        linewidth = 2,
+        yscale = :log10
+    )
+
     ops_path = joinpath(output_dir, "lu_factorization_operations_vs_size.png")
+    ops_log_path = joinpath(output_dir, "lu_factorization_operations_vs_size_log.png")
     time_path = joinpath(output_dir, "lu_factorization_time_vs_size.png")
+    time_log_path = joinpath(output_dir, "lu_factorization_time_vs_size_log.png")
     savefig(p_ops, ops_path)
+    savefig(p_ops_log, ops_log_path)
     savefig(p_time, time_path)
+    savefig(p_time_log, time_log_path)
     display(p_ops)
+    display(p_ops_log)
     display(p_time)
-    return (operations_plot = ops_path, time_plot = time_path)
+    display(p_time_log)
+    return (operations_plot = ops_path, operations_plot_log = ops_log_path, time_plot = time_path, time_plot_log = time_log_path)
 end
 
 function run_experiment(; max_size::Int = CONFIG.max_size, step::Int = CONFIG.step, trials::Int = CONFIG.trials, random_seed::Int = CONFIG.random_seed, output_dir::AbstractString = CONFIG.output_dir)
@@ -132,7 +171,7 @@ function run_experiment(; max_size::Int = CONFIG.max_size, step::Int = CONFIG.st
             add_ref = Ref(0)
             mul_ref = Ref(0)
             elapsed = @elapsed begin
-                _, _, _, _ = LU_factor(A, strassen_pad, add_ref, mul_ref)
+                _, _, _, _ = LU_factor(A, default_mul, add_ref, mul_ref)
             end
             push!(records, (size = n, trial = trial, adds = add_ref[], muls = mul_ref[], time = elapsed))
         end
