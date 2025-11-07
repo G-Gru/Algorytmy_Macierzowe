@@ -1,4 +1,0 @@
-max_size=1040
-step=10
-trials=10
-random_seed=2025
