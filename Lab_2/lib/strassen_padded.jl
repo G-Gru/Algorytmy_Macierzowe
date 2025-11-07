@@ -2,14 +2,17 @@ module strassen_padded
 
 export strassen_pad
 
+# helper to check if integer is power of 2
 ispow2(n::Integer) = n > 0 && (n & (n - 1)) == 0
 
+# Strassen multiplication for numbers
 function strassen_pad(A::Number, B::Number, add_count::Ref{Int}=Ref(0), mul_count::Ref{Int}=Ref(0), orig_rows::Int=typemax(Int), orig_cols::Int=typemax(Int))
     mul_count[] += 1
     return A * B, add_count[], mul_count[]
     
 end
 
+# Strassen multiplication for vectors
 function strassen_pad(A::AbstractVector, B::AbstractVector, add_count::Ref{Int}=Ref(0), mul_count::Ref{Int}=Ref(0), orig_rows::Int=typemax(Int), orig_cols::Int=typemax(Int))
     n = length(A)
     @assert n == length(B) "vectors must be of same length"
@@ -23,10 +26,11 @@ function strassen_pad(A::AbstractVector, B::AbstractVector, add_count::Ref{Int}=
     
 end
 
+# Strassen multiplication for matrices
 function strassen_pad(A::AbstractMatrix, B::AbstractMatrix, add_count::Ref{Int}=Ref(0), mul_count::Ref{Int}=Ref(0), orig_rows::Int=typemax(Int), orig_cols::Int=typemax(Int))
     rA, cA = size(A)
     rB, cB = size(B)
-    @assert cA == rB "matrices must have the same dimensions"
+    @assert cA == rB "matrices must have compatible dimensions"
 
     if orig_rows == typemax(Int) && orig_cols == typemax(Int)
         orig_rows, orig_cols = rA, cB

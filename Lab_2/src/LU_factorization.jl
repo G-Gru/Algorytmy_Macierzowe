@@ -7,12 +7,14 @@ using .matrix_inversion
 
 export LU_factor
 
+# LU factorization for scalars
 function LU_factor(A::Number, mul = matrix_inversion.default_mul, add_count::Ref{Int}=Ref(0), mul_count::Ref{Int}=Ref(0))
     L = one(eltype(A))
     U = A
     return L, U, add_count[], mul_count[]
 end
 
+# LU factorization for vectors
 function LU_factor(A::AbstractVector, mul = matrix_inversion.default_mul, add_count::Ref{Int}=Ref(0), mul_count::Ref{Int}=Ref(0))
     n = length(A)
     if n == 1
@@ -27,6 +29,7 @@ function LU_factor(A::AbstractVector, mul = matrix_inversion.default_mul, add_co
     
 end
 
+# LU factorization for matrices
 function LU_factor(A::AbstractMatrix, mul = matrix_inversion.default_mul, add_count::Ref{Int}=Ref(0), mul_count::Ref{Int}=Ref(0))
     n = size(A,1)
     if n != size(A,2)

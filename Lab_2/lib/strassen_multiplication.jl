@@ -2,12 +2,14 @@ module strassen_multiplication
 
 export strassen
 
+# Strassen multiplication for numbers
 function strassen(A::Number, B::Number, add_count::Ref{Int}=Ref(0), mul_count::Ref{Int}=Ref(0))
     mul_count[] += 1
     return A * B, add_count[], mul_count[]
     
 end
 
+# Strassen multiplication for vectors
 function strassen(A::AbstractVector, B::AbstractVector, add_count::Ref{Int}=Ref(0), mul_count::Ref{Int}=Ref(0))
     n = length(A)
     @assert n == length(B) "vectors must be of same length"
@@ -21,6 +23,7 @@ function strassen(A::AbstractVector, B::AbstractVector, add_count::Ref{Int}=Ref(
     
 end
 
+# Strassen multiplication for matrices
 function strassen(A::AbstractMatrix, B::AbstractMatrix, add_count::Ref{Int}=Ref(0), mul_count::Ref{Int}=Ref(0))
     n = size(A, 1)
     @assert n == size(A,2) == size(B,1) == size(B,2) "square matrices of same size required"
