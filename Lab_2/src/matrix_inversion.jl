@@ -12,6 +12,7 @@ function _matadd!(X, Y, add_count::Ref{Int})
     add_count[] += prod(size(X))
     return X .+ Y
 end
+
 function _matsub!(X, Y, add_count::Ref{Int})
     add_count[] += prod(size(X))
     return X .- Y
