@@ -17,7 +17,7 @@ end
 
 function compression_tree(A::AbstractMatrix,
                           r_min::Int, r_max::Int, c_min::Int, c_max::Int,
-                          r::Int, m)
+                          r::Int, m::Float64)
 
     T = eltype(A)
     sub = @view A[r_min:r_max, c_min:c_max]
@@ -37,7 +37,8 @@ function compression_tree(A::AbstractMatrix,
     U, D, V = truncated_svd(Matrix(sub), r + 1)
     s = diag(D)
 
-    if s[r + 1] < m
+    s1 = s[1]
+    if s1 == 0 || (s[r + 1] / s1) <= m
         return compress(r_min, r_max, c_min, c_max, U, D, V, r)
     end
 

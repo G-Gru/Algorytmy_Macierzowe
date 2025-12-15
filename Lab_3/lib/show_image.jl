@@ -58,12 +58,16 @@ end
 
 # map any numeric matrix to [0,1] (simple, notebook-friendly)
 function _norm01(A::AbstractMatrix)
-    amin = minimum(A)
-    amax = maximum(A)
-    if amax == amin
-        return fill(0.0, size(A))
+    X = Float64.(A)
+    xmin, xmax = minimum(X), maximum(X)
+
+    if xmin >= 0.0 && xmax <= 1.0
+        return clamp.(X, 0.0, 1.0)
     end
-    return (A .- amin) ./ (amax - amin)
+    if xmax == xmin
+        return fill(0.0, size(X))
+    end
+    return clamp.((X .- xmin) ./ (xmax - xmin), 0.0, 1.0)
 end
 
 # --- GREY ---
