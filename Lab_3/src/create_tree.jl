@@ -37,8 +37,12 @@ function compression_tree(A::AbstractMatrix,
     U, D, V = truncated_svd(Matrix(sub), r + 1)
     s = diag(D)
 
-    s1 = s[1]
-    if s1 == 0 || (s[r + 1] / s1) <= m
+#    s1 = s[1]
+#    if s1 == 0 || (s[r + 1] / s1) <= m
+#        return compress(r_min, r_max, c_min, c_max, U, D, V, r)
+#    end
+    
+    if s[r+1]<=m
         return compress(r_min, r_max, c_min, c_max, U, D, V, r)
     end
 

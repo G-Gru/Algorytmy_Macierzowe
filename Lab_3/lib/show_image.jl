@@ -123,25 +123,26 @@ function show_color(A1::AbstractMatrix, A2::AbstractMatrix, A3::AbstractMatrix;
     elseif space == :hsv
         H = Float64.(A1); S = Float64.(A2); V = Float64.(A3)
 
-        # heuristic: if H looks like degrees, scale to [0,1]
-        if maximum(H) > 1.0
-            H = H ./ 360.0
+        hmax = maximum(H)
+        if hmax <= 1.0
+            H = 360.0 .* H
+        elseif hmax <= 2pi + 1e-6
+            H = (180.0 / pi) .* H
         end
-        H = clamp.(H, 0.0, 1.0)
-        S = clamp.(_norm01(S), 0.0, 1.0)
-        V = clamp.(_norm01(V), 0.0, 1.0)
+        H = mod.(H, 360.0)
+
+        S = clamp.(S, 0.0, 1.0)
+        V = clamp.(V, 0.0, 1.0)
 
         img = RGB.(HSV.(H, S, V))
 
     elseif space == :lab
         L = Float64.(A1); a = Float64.(A2); b = Float64.(A3)
 
-        # heuristic: if L is normalized, scale to [0,100]
         if maximum(L) <= 1.0
             L = 100.0 .* L
         end
 
-        # heuristic: if a/b are normalized, map [0,1] -> [-128,127]
         if minimum(a) >= 0.0 && maximum(a) <= 1.0
             a = (a .- 0.5) .* 255.0
         end
