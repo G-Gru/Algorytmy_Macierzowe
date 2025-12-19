@@ -7,7 +7,7 @@ using .tree_node
 using Colors
 using FileIO
 
-export show_grey, show_color
+export show_grey, show_color, _tree_to_matrix
 
 function _tree_to_matrix(root::tree_node.TreeNode)
     rmin, rmax, cmin, cmax = root.size
@@ -56,7 +56,7 @@ function _tree_to_matrix(root)
     return X
 end
 
-# map any numeric matrix to [0,1] (simple, notebook-friendly)
+# map any numeric matrix to [0,1]
 function _norm01(A::AbstractMatrix)
     X = Float64.(A)
     xmin, xmax = minimum(X), maximum(X)
@@ -73,17 +73,17 @@ end
 # --- GREY ---
 
 function show_grey(root; savepath::Union{Nothing,String}=nothing)
-    return show_grey(_tree_to_matrix(root); savepath=savepath)  # calls matrix version
+    return show_grey(_tree_to_matrix(root); savepath=savepath)
 end
 
 function show_grey(root::tree_node.TreeNode; savepath::Union{Nothing,String}=nothing)
     A = _tree_to_matrix(root)
-    return show_grey(A; savepath=savepath)   # calls the existing matrix method
+    return show_grey(A; savepath=savepath)
 end
 
 function show_grey(A::AbstractMatrix; savepath::Union{Nothing,String}=nothing)
     X = _norm01(Float64.(A))
-    img = Gray.(X)              # matrix of Gray pixels (shows in .ipynb)
+    img = Gray.(X)
 
     if savepath !== nothing
         save(savepath, img)
@@ -105,7 +105,7 @@ function show_color(t1::TreeNode, t2::TreeNode, t3::TreeNode;
     A1 = _tree_to_matrix(t1)
     A2 = _tree_to_matrix(t2)
     A3 = _tree_to_matrix(t3)
-    return show_color(A1, A2, A3; space=space, savepath=savepath)  # existing matrix method
+    return show_color(A1, A2, A3; space=space, savepath=savepath)
 end
 
 function show_color(A1::AbstractMatrix, A2::AbstractMatrix, A3::AbstractMatrix;
