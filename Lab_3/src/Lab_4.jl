@@ -1,3 +1,4 @@
+module Lab_4
 import Random
 
 function network_vertex_idx(x, y, z, k)
@@ -26,3 +27,4 @@ function gen_network_matrix(k, rng=Random.Xoshiro(2137))
 end
 
 include("operations.jl")
+end # module Lab_4

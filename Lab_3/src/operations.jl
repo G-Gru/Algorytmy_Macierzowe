@@ -1,7 +1,7 @@
 module Operations
 
-import ..create_tree
-import ..tree_node
+import ..Lab_3.create_tree
+import ..Lab_3.tree_node
 
 export matrix_vector_mult
 
@@ -48,8 +48,8 @@ function matrix_matrix_add(v, w, r=1, m=5.0)  # TODO are these default values al
     end
 
     # both matrices are nonzero leaves
-    if isempty(v.sons) && isempty(w.sons) && v.rank =! 0 && w.rank =! 0
-        U = [v.U w.U]
+    if isempty(v.sons) && isempty(w.sons) && v.rank != 0 && w.rank != 0
+        U = [v.U; w.U]
         V = [v.V; w.V]
 
         # reconstructs a matrix from the values, then compresses it (costly)
@@ -74,7 +74,7 @@ function matrix_matrix_add(v, w, r=1, m=5.0)  # TODO are these default values al
     end
 
     # none of the matrices are leaves, recurse them
-    if !isempty(v.sons) and !isempty(w.sons)
+    if !isempty(v.sons) && !isempty(w.sons)
         sons = [matrix_matrix_add(a, b) for (a, b) in zip(v.sons, w.sons)]
         return tree_node.TreeNode{T}() # TODO construct
     end
