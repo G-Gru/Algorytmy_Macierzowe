@@ -3,7 +3,7 @@ module Operations
 import ..create_tree
 import ..tree_node
 
-export matrix_vector_mult, matrix_matrix_add
+export matrix_vector_mult, matrix_matrix_add, matrix_matrix_mult
 
 function matrix_vector_mult(v, X)
     rows = size(X, 1)
@@ -58,10 +58,7 @@ function sons_of(m)
 end
 
 
-
 function matrix_matrix_add(v, w, r=1, m=5.0)  # TODO are these default values alright?
-    r_min, c_min = 1, 1
-    r_max, c_max = size(v.U, 2), size(v.V, 1)
     T = eltype(v.U)
 
     # both matrices are zeroed leaves
