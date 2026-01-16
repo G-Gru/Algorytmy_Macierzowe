@@ -38,6 +38,27 @@ function new_mat(u, v, sons)
     )
 end
 
+function sons_of(m)
+    if isempty(m.sons)
+        umid = size(m.U, 1) ÷ 2
+        vmid = size(m.V, 2) ÷ 2
+
+        u1, u2 = m.U[1:umid,:], m.U[umid+1:end,:]
+        v1, v2 = m.V[:,1:vmid], m.V[:,vmid+1:end]
+
+        lu = new_mat(u1, v1, [])
+        ru = new_mat(u1, v2, [])
+        ll = new_mat(u2, v1, [])
+        rl = new_mat(u2, v2, [])
+
+        [lu, ru, ll, rl]
+    else
+        m.sons
+    end
+end
+
+
+
 function matrix_matrix_add(v, w, r=1, m=5.0)  # TODO are these default values alright?
     r_min, c_min = 1, 1
     r_max, c_max = size(v.U, 2), size(v.V, 1)
@@ -61,27 +82,32 @@ function matrix_matrix_add(v, w, r=1, m=5.0)  # TODO are these default values al
         return create_tree.compression_tree(ans, 1, rows, 1, cols, r, m)
     end
 
-    sons_of = function(m)
-        if isempty(m.sons)
-            umid = size(m.U, 1) ÷ 2
-            vmid = size(m.V, 2) ÷ 2
+    sons = [matrix_matrix_add(a, b) for (a, b) in zip(sons_of(v), sons_of(w))]
+    return new_mat(zeros(T, 0, 0), zeros(T, 0, 0), sons)
+end
 
-            u1, u2 = m.U[1:umid,:], m.U[umid+1:end,:]
-            v1, v2 = m.V[:,1:vmid], m.V[:,vmid+1:end]
+function matrix_matrix_mult(v, w)
+    T = eltype(v.U)
 
-            lu = new_mat(u1, v1, [])
-            ru = new_mat(u1, v2, [])
-            ll = new_mat(u2, v1, [])
-            rl = new_mat(u2, v2, [])
-
-            [lu, ru, ll, rl]
-        else
-            m.sons
+    if isempty(v.sons) && isempty(w.sons)
+        if v.rank == 0 && w.rank == 0
+            return new_mat(zero(v.U), zero(v.V), [])
+        elseif v.rank != 0 && w.rank != 0
+            u = v.U * (v.V * w.U)
+            return new_mat(u, w.V, [])
         end
     end
 
-    sons = [matrix_matrix_add(a, b) for (a, b) in zip(sons_of(v), sons_of(w))]
-    return new_mat(zeros(T, 0, 0), zeros(T, 0, 0), sons)
+    a = sons_of(v)
+    b = sons_of(w)
+    sons = [
+        matrix_matrix_add(matrix_matrix_mult(a[1], b[1]), matrix_matrix_mult(a[2], b[3])),
+        matrix_matrix_add(matrix_matrix_mult(a[1], b[2]), matrix_matrix_mult(a[2], b[4])),
+        matrix_matrix_add(matrix_matrix_mult(a[3], b[1]), matrix_matrix_mult(a[4], b[3])),
+        matrix_matrix_add(matrix_matrix_mult(a[3], b[2]), matrix_matrix_mult(a[4], b[4])),
+    ]
+
+    new_mat(zeros(T, 0, 0), zeros(T, 0, 0), sons)
 end
 
 end
