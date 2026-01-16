@@ -5,7 +5,7 @@ export TreeNode
 mutable struct TreeNode{T}
     rank::Int
     size::NTuple{4,Int}                 # (r_min, r_max, c_min, c_max)
-    singularvalues::Vector{T}
+    singularvalues::Vector{T} | nothing
     U::Matrix{T}
     V::Matrix{T}                        # stores (D*Vᵀ) truncated
     sons::Vector{TreeNode{T}}
