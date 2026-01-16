@@ -24,3 +24,5 @@ function gen_network_matrix(k, rng=Random.Xoshiro(2137))
 
     m
 end
+
+include("operations.jl")
